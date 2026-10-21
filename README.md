@@ -32,11 +32,16 @@ Fişin fotoğrafını çekip içindeki ürünleri, tutarları ve KDV'yi otomatik
 7. [Giriş, kayıt ve şifre sıfırlama](#-giriş-kayıt-ve-şifre-sıfırlama)
 8. [Veritabanı ve JSON görünümü](#-veritabanı-ve-json-görünümü)
 9. [Mimari](#-mimari)
-10. [Kullanılan teknolojiler](#-kullanılan-teknolojiler)
-11. [Karşılaşılan sorunlar ve çözümler](#-karşılaşılan-sorunlar-ve-çözümler)
-12. [Kurulum ve çalıştırma](#-kurulum-ve-çalıştırma)
-13. [Sunum için demo senaryosu](#-sunum-için-demo-senaryosu)
-14. [Sınırlamalar ve geliştirme fikirleri](#-sınırlamalar-ve-geliştirme-fikirleri)
+10. [Geliştirme ve test ortamı (emülatör)](#-geliştirme-ve-test-ortamı)
+11. [Kullanılan paketler ve sürümleri](#-kullanılan-paketler-ve-sürümleri)
+12. [Dosyalar](#-dosyalar)
+13. [Widget'lar](#-widgetlar)
+14. [Sınıflar ve fonksiyonlar](#-sınıflar-ve-fonksiyonlar)
+15. [Testler](#-testler)
+16. [Karşılaşılan sorunlar ve çözümler](#-karşılaşılan-sorunlar-ve-çözümler)
+17. [Kurulum ve çalıştırma](#-kurulum-ve-çalıştırma)
+18. [Sunum için demo senaryosu](#-sunum-için-demo-senaryosu)
+19. [Sınırlamalar ve geliştirme fikirleri](#-sınırlamalar-ve-geliştirme-fikirleri)
 
 ---
 
@@ -325,19 +330,292 @@ tool/db_cek.dart                  Cihazdaki veritabanını database/ klasörüne
 
 ---
 
-## 🧰 Kullanılan teknolojiler
+## 🖥️ Geliştirme ve test ortamı
 
-| Paket | Ne için? |
+### Android emülatörü
+
+Uygulama ve README'deki tüm ekran görüntüleri bu sanal cihazda test edildi:
+
+| Özellik | Değer |
 |---|---|
-| `google_mlkit_text_recognition` | Cihaz üzerinde, internetsiz metin tanıma (OCR) |
-| `image_picker` | Kamera ve galeriden fotoğraf seçme |
-| `hive_ce` / `hive_ce_flutter` | Hızlı, yerel NoSQL veritabanı (Android ve web) |
-| `provider` | Durum yönetimi |
-| `fl_chart` | Çubuk ve halka grafikler |
-| `crypto` | Şifre özeti (SHA-256) |
-| `intl` + `flutter_localizations` | Türkçe tarih (`18 Ekim 2026`) ve para (`₺1.068,45`) biçimi |
-| `path_provider` | Fiş görselleri ve JSON dosyası için klasörler |
-| Plus Jakarta Sans | Türkçe karakter destekli font, uygulamaya gömülü |
+| AVD adı | `Pixel_10_Pro` (cihaz profili: **Google Pixel 10 Pro**) |
+| Android sürümü | **Android 17** (API seviyesi **37**, build `CP41.260831.007`) |
+| Sistem görüntüsü | Google APIs **Play Store**, 16 KB sayfa boyutu (`android-37.2 / google_apis_playstore_ps16k`) |
+| İşlemci mimarisi | `x86_64` |
+| Ekran | 1280 × 2856 piksel, 480 dpi |
+| RAM / depolama | 2 GB RAM, 10 GB veri bölümü |
+| Grafik | GPU modu `auto` (donanım hızlandırmalı) |
+| Emülatör sürümü | Android Emulator **37.2.12.0** |
+
+> Kameralı testlerde emülatörün sanal sahnesi kullanılır. Gerçekçi bir OCR testi için oluşturulan fiş görseli emülatörün galerisine yüklenip *Galeriden seç* ile okutuldu.
+
+### Araçlar ve derleme ayarları
+
+| Araç | Sürüm |
+|---|---|
+| İşletim sistemi | Windows 11 Pro |
+| Flutter | **3.47.5** (stable kanal) |
+| Dart | **3.13.4** |
+| DevTools | 2.60.0 |
+| Android Gradle Plugin | 9.1.0 |
+| Gradle | 9.3.1 |
+| Kotlin | 2.4.0 |
+| JDK | OpenJDK 25 (Android Studio JBR), Java hedefi 17 |
+| Android NDK | 28.2.13676358 |
+| CMake | 3.22.1 |
+| `compileSdk` / `targetSdk` | 36 / 36 |
+| `minSdk` | **24** (Android 7.0 ve üzeri) |
+| Uygulama kimliği | `com.kagan.fis_takip` · sürüm 1.0.0 (1) |
+| APK mimarileri | `arm64-v8a`, `armeabi-v7a`, `x86_64` |
+| Web testi | Google Chrome 155 |
+
+---
+
+## 📦 Kullanılan paketler ve sürümleri
+
+| Paket | Sürüm | Ne için? |
+|---|---|---|
+| `google_mlkit_text_recognition` | 0.17.1 | Cihaz üzerinde, internetsiz metin tanıma (OCR) |
+| `image_picker` | 1.2.4 | Kamera ve galeriden fotoğraf seçme |
+| `hive_ce` | 2.22.0 | Hızlı, yerel NoSQL veritabanı |
+| `hive_ce_flutter` | 2.5.0 | Hive'ın Flutter entegrasyonu (Android dosyası, web IndexedDB) |
+| `provider` | 6.1.5+1 | Durum yönetimi (`ChangeNotifier`) |
+| `fl_chart` | 1.2.0 | Çubuk ve halka grafikler |
+| `crypto` | 3.0.7 | Şifre özeti (SHA-256) |
+| `intl` | 0.20.3 | Türkçe tarih (`18 Ekim 2026`) ve para (`₺1.068,45`) biçimi |
+| `flutter_localizations` | SDK | Takvim ve saat seçicilerin Türkçe olması |
+| `path_provider` | 2.1.6 | Fiş görselleri ve JSON dosyası için klasörler |
+| `cupertino_icons` | 1.0.9 | İkon seti |
+| `flutter_lints` *(geliştirme)* | 6.0.0 | Kod kalite kuralları |
+| `flutter_test` *(geliştirme)* | SDK | Birim testleri |
+| **Plus Jakarta Sans** | 400–800 | Türkçe karakter destekli font, `assets/fonts` içine gömülü |
+
+---
+
+## 📂 Dosyalar
+
+Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosyası, 1 test dosyası ve 1 araç betiği.
+
+| Dosya | Satır | Görevi |
+|---|---:|---|
+| **Giriş ve tema** | | |
+| `lib/main.dart` | 60 | Uygulamayı başlatır: Türkçe tarih verisi, veritabanını açma, Provider'lar, giriş yapılmışsa ana sayfa yoksa giriş ekranı |
+| `lib/theme.dart` | 256 | Renk paleti, açık/koyu tema, font, buton, kart, form ve alt menü stilleri |
+| **Veri ve modeller** | | |
+| `lib/data/app_database.dart` | 24 | Hive'ı başlatır, `users`, `receipts` ve `session` kutularını açar |
+| `lib/models/app_user.dart` | 31 | Kullanıcı modeli (ad, e-posta, şifre özeti, salt) |
+| `lib/models/receipt.dart` | 90 | Fiş (`Receipt`) ve fiş kalemi (`ReceiptItem`) modelleri |
+| `lib/models/expense_category.dart` | 123 | 9 harcama kategorisi (ikon, renk, anahtar kelimeler) ve kategori tahmini |
+| **Durum yönetimi** | | |
+| `lib/state/auth_controller.dart` | 175 | Kayıt, giriş, çıkış, Beni hatırla, doğrulama kodu ve şifre sıfırlama |
+| `lib/state/receipt_controller.dart` | 64 | Giriş yapan kullanıcının fişlerini yükler, kaydeder, siler |
+| **Servisler** | | |
+| `lib/services/receipt_parser.dart` | 336 | OCR metnini temizler ve Türk fişini ayrıştırır |
+| `lib/services/report_service.dart` | 193 | Günlük, haftalık ve aylık dönem hesapları ve rapor özetleri |
+| `lib/services/db_export.dart` | 66 | Veritabanını JSON'a çevirir ve dosyaya yansıtır |
+| `lib/services/platform/platform_services.dart` | 5 | Mobilde ve web'de doğru uygulamayı seçen koşullu export |
+| `lib/services/platform/platform_services_io.dart` | 85 | Mobil: ML Kit OCR, satır birleştirme, görsel ve JSON dosyası |
+| `lib/services/platform/platform_services_stub.dart` | 16 | Web: OCR ve dosya işlemlerinin boş karşılıkları |
+| **Ekranlar** | | |
+| `lib/screens/auth/auth_layout.dart` | 196 | Giriş ekranlarının ortak iskeleti (gradyanlı başlık) ve şifre alanı |
+| `lib/screens/auth/login_screen.dart` | 177 | Giriş ekranı, Beni hatırla, Şifremi unuttum bağlantısı |
+| `lib/screens/auth/register_screen.dart` | 132 | Kayıt ekranı ve form doğrulama |
+| `lib/screens/auth/forgot_password_screen.dart` | 337 | 3 adımlı şifre sıfırlama (kullanıcı adı → kod → yeni şifre) |
+| `lib/screens/home/home_shell.dart` | 68 | Alt menü (Ana Sayfa · Raporlar · Geçmiş Fişler) |
+| `lib/screens/home/dashboard_screen.dart` | 426 | "Merhaba kullanıcı!", **+** butonu, özet kartı, kategoriler, son fişler |
+| `lib/screens/home/database_screen.dart` | 129 | Veritabanının JSON görünümü |
+| `lib/screens/receipts/add_receipt_flow.dart` | 221 | **+** menüsü, kamera/galeri/metin/elle ekleme akışı |
+| `lib/screens/receipts/receipt_form_screen.dart` | 529 | Okunan fişi kontrol etme ve düzenleme formu |
+| `lib/screens/receipts/receipt_detail_screen.dart` | 216 | Fiş detayı, düzenleme ve silme |
+| `lib/screens/receipts/history_screen.dart` | 177 | Geçmiş fişler: arama, filtre, aylara göre gruplama |
+| `lib/screens/receipts/image_viewer.dart` | 23 | Fiş görselini tam ekran ve yakınlaştırılabilir açar |
+| `lib/screens/reports/reports_screen.dart` | 491 | Raporlar ekranı ve grafikler |
+| **Ortak bileşenler ve yardımcılar** | | |
+| `lib/widgets/common.dart` | 153 | Fiş satırı, kategori ikonu, bölüm başlığı, boş durum, kart listesi |
+| `lib/widgets/pill_tabs.dart` | 125 | Kayan sekme seçici |
+| `lib/widgets/otp_widgets.dart` | 286 | Sağ üstte çıkan kod bildirimi ve 6 kutulu kod girişi |
+| `lib/utils/format.dart` | 41 | Para, tarih ve sayı biçimlendirme |
+| `lib/utils/text_utils.dart` | 38 | Türkçeye uygun büyük/küçük harf dönüşümleri |
+| **Test ve araç** | | |
+| `test/receipt_parser_test.dart` | 130 | Ayrıştırıcının 6 birim testi |
+| `tool/db_cek.dart` | 80 | Emülatördeki veritabanını `database/` klasörüne çeker |
+
+**Diğer dosyalar:**
+
+| Dosya | Görevi |
+|---|---|
+| `pubspec.yaml` | Paketler ve font tanımları |
+| `assets/fonts/PlusJakartaSans-*.ttf` | 5 kalınlıkta gömülü font |
+| `android/app/build.gradle.kts` | Android derleme ayarları |
+| `android/app/src/main/AndroidManifest.xml` | Uygulama adı ("Fiş Takip") ve izinler |
+| `docs/screenshots/*.png` | README'deki 10 ekran görüntüsü |
+| `docs/database_ornek.json` | Örnek veritabanı içeriği |
+
+---
+
+## 🧱 Widget'lar
+
+### Projede yazılan widget'lar
+
+| Widget | Tür | Dosya | Görevi |
+|---|---|---|---|
+| `FisTakipApp` | Stateless | `main.dart` | `MaterialApp`, tema, Türkçe yerelleştirme, giriş durumuna göre ilk ekran |
+| `AuthLayout` | Stateless | `auth_layout.dart` | Giriş, kayıt ve şifre sıfırlamanın ortak iskeleti |
+| `PasswordField` | Stateful | `auth_layout.dart` | Göster/gizle butonlu şifre alanı |
+| `LoginScreen` | Stateful | `login_screen.dart` | Giriş formu, Beni hatırla onay kutusu |
+| `RegisterScreen` | Stateful | `register_screen.dart` | Kayıt formu |
+| `ForgotPasswordScreen` | Stateful | `forgot_password_screen.dart` | Adım göstergeli şifre sıfırlama |
+| `HomeShell` | Stateful | `home_shell.dart` | `NavigationBar` + `IndexedStack` ile sekmeler |
+| `DashboardScreen` | Stateless | `dashboard_screen.dart` | Ana sayfa |
+| `_MonthSummaryCard` | Stateless | `dashboard_screen.dart` | Gradyanlı aylık harcama kartı |
+| `_AddButton` | Stateless | `dashboard_screen.dart` | Sağ üstteki gölgeli **+** butonu |
+| `_CategoryBar` | Stateless | `dashboard_screen.dart` | Kategori ilerleme çubuğu |
+| `DatabaseScreen` | Stateful | `database_screen.dart` | JSON görüntüleme |
+| `ReceiptFormScreen` | Stateful | `receipt_form_screen.dart` | Fiş kontrol ve düzenleme formu |
+| `_ItemEditor` | Stateless | `receipt_form_screen.dart` | Ürün satırı (ad, adet, tutar, sil) |
+| `ReceiptDetailScreen` | Stateless | `receipt_detail_screen.dart` | Fiş detayı |
+| `HistoryScreen` | Stateful | `history_screen.dart` | Geçmiş fişler, arama ve filtre |
+| `ReportsScreen` | Stateful | `reports_screen.dart` | Raporlar |
+| `_SummaryCard` | Stateless | `reports_screen.dart` | Toplam, ortalama, KDV ve önceki döneme göre değişim |
+| `_TrendChart` | Stateless | `reports_screen.dart` | `BarChart` ile saat veya gün grafiği |
+| `_CategoryCard` | Stateless | `reports_screen.dart` | `PieChart` ile kategori dağılımı |
+| `_ItemsCard` | Stateless | `reports_screen.dart` | Ürün bazında döküm |
+| `PillTabs<T>` | Stateless (generic) | `pill_tabs.dart` | Kayan seçici (Günlük/Haftalık/Aylık, Nakit/Kart) |
+| `OtpInput` | Stateful | `otp_widgets.dart` | 6 kutulu doğrulama kodu girişi |
+| `_OtpNotification` | Stateful + animasyon | `otp_widgets.dart` | Sağ üstten kayarak gelen kod bildirimi |
+| `ReceiptTile` | Stateless | `common.dart` | Listelerde fiş satırı |
+| `CategoryAvatar` | Stateless | `common.dart` | Kategori renginde ikon kutusu |
+| `SectionHeader` · `EmptyState` · `CardList` | Stateless | `common.dart` | Bölüm başlığı, boş durum ve ayraçlı kart listesi |
+
+### Kullanılan hazır Flutter widget'ları
+
+| Grup | Widget'lar |
+|---|---|
+| **Uygulama ve sayfa** | `MaterialApp`, `Scaffold`, `AppBar`, `SafeArea`, `NavigationBar`, `IndexedStack`, `MaterialPageRoute`, `AnnotatedRegion` (durum çubuğu rengi) |
+| **Yerleşim** | `Column`, `Row`, `Stack`, `Positioned`, `Expanded`, `Flexible`, `Wrap`, `Padding`, `SizedBox`, `Container`, `Center`, `Align`, `ConstrainedBox`, `LayoutBuilder`, `FittedBox` |
+| **Listeler ve kaydırma** | `ListView`, `SingleChildScrollView`, `ListTile`, `Card`, `Divider`, `Dismissible` (kaydırarak silme), `ExpansionTile` |
+| **Form ve giriş** | `Form`, `TextFormField`, `TextField`, `DropdownButtonFormField`, `Checkbox`, `ChoiceChip`, `InputDecorator`, `showDatePicker`, `showTimePicker` |
+| **Butonlar** | `FilledButton`, `TextButton`, `IconButton`, `PopupMenuButton`, `InkWell`, `GestureDetector`, `Tooltip` |
+| **Diyalog ve bildirim** | `showModalBottomSheet`, `AlertDialog`, `showDialog`, `SnackBar`, `Overlay` / `OverlayEntry` |
+| **Animasyon** | `AnimatedSwitcher`, `AnimatedPositioned`, `AnimatedContainer`, `AnimatedDefaultTextStyle`, `SlideTransition`, `FadeTransition`, `AnimationController` |
+| **Görsel ve metin** | `Image.file`, `InteractiveViewer` (yakınlaştırma), `Icon`, `Text`, `SelectableText`, `CircularProgressIndicator`, `LinearProgressIndicator` |
+| **Grafik (fl_chart)** | `BarChart`, `PieChart` |
+| **Erişilebilirlik ve odak** | `Semantics`, `ExcludeFocus`, `FocusNode` |
+| **Durum yönetimi (provider)** | `MultiProvider`, `ChangeNotifierProvider`, `ChangeNotifierProxyProvider`, `Provider.value`, `context.watch` / `read` / `select` |
+
+---
+
+## ⚙️ Sınıflar ve fonksiyonlar
+
+### `AuthController` (state/auth_controller.dart)
+
+| Fonksiyon | Açıklama |
+|---|---|
+| `register({username, email, password})` | Kullanıcı adı ve e-postanın benzersiz olduğunu kontrol eder, salt üretir, şifre özetini kaydeder ve oturum açar |
+| `login({identifier, password, remember})` | Kullanıcı adı **veya** e-posta ile giriş yapar. `remember` false ise oturum diske yazılmaz |
+| `logout()` | Oturumu kapatır |
+| `rememberedIdentifier` | Beni hatırla ile son giriş yapan kullanıcı adı (giriş ekranını doldurur) |
+| `requestPasswordReset(identifier)` | Kullanıcıyı bulur, `Random.secure()` ile 6 haneli kod üretir, kodun geçerlilik süresini başlatır |
+| `verifyOtp(code)` | Kodu, süresini (3 dk) ve deneme hakkını (5) kontrol eder |
+| `resetPassword(newPassword)` | Kod doğrulandıysa yeni salt ve özetle şifreyi günceller |
+| `cancelPasswordReset()` | Bekleyen kodu geçersiz kılar |
+| `_hash(password, salt)` | `SHA-256(salt:şifre)` hesaplar |
+| `_newSalt()` | 16 baytlık rastgele salt üretir |
+
+### `ReceiptController` (state/receipt_controller.dart)
+
+| Fonksiyon | Açıklama |
+|---|---|
+| `setOwner(username)` | Giriş yapan kullanıcı değişince onun fişlerini yükler |
+| `receipts` | Kullanıcının fişleri, yeniden eskiye sıralı |
+| `save(receipt)` · `delete(receipt)` | Fişi kaydeder/günceller · siler (görseliyle birlikte) |
+| `byId(id)` · `newId()` | Id ile fiş bulur · benzersiz id üretir |
+
+### `ReceiptParser` (services/receipt_parser.dart)
+
+| Fonksiyon | Açıklama |
+|---|---|
+| `parse(text)` → `ParsedReceipt` | Ana fonksiyon: metni satırlara böler, temizler ve tüm alanları çıkarır |
+| `_cleanOcrLine(line)` | OCR hatalarını düzeltir (O→0, `Ỉ`→`İ`, `37, 50`→`37,50`) |
+| `amountOf(line)` · `_parseAmount(raw)` | Satır sonundaki tutarı bulur · `1.234,56` → `1234.56` |
+| `_findStoreName` | İlk anlamlı satırdan mağaza adını bulur |
+| `_findDate` | Tarih ve saati bulur |
+| `_findTotal` · `_findVat` | Toplamı (`GENEL TOPLAM` öncelikli) ve KDV'yi bulur |
+| `_findItems` | Ürünleri, adet satırlarını (`3 AD X 12,50`), alt satıra düşen fiyatları ve indirimleri ayrıştırır |
+| `_findPayment` · `_findReceiptNo` | Ödeme tipi (Nakit/Kart) · fiş numarası |
+| `_containsAny(key, keywords)` | Tam kelime eşleştirmesi ("KART" ≠ "KARTON") |
+
+### Rapor servisi (services/report_service.dart)
+
+| Fonksiyon / sınıf | Açıklama |
+|---|---|
+| `ReportPeriod` | `daily`, `weekly`, `monthly` |
+| `rangeFor(period, anchor)` | Dönemin başlangıç ve bitişi (hafta pazartesi başlar) |
+| `shiftAnchor(period, anchor, delta)` | Önceki veya sonraki döneme geçer |
+| `rangeLabel(period, range)` | "13 – 19 Eki 2026", "Ekim 2026" gibi başlıklar |
+| `ReportData.build(receipts, range, period)` | Toplam, KDV, kategori/mağaza/ürün kırılımı ve grafik verisini hesaplar |
+| `ChartBucket` · `AmountShare` · `ItemSummary` | Grafik dilimi · kategori/mağaza payı · ürün özeti |
+
+### Platform servisleri (services/platform/)
+
+| Fonksiyon | Mobil | Web |
+|---|---|---|
+| `ocrSupported` | `true` | `false` |
+| `recognizeReceiptText(imagePath)` | ML Kit ile okur ve `_rebuildRows` ile satırları birleştirir | Desteklenmez |
+| `persistReceiptImage(path, id)` | Görseli uygulamanın kalıcı klasörüne kopyalar | — |
+| `deleteReceiptImage(path)` | Görseli siler | — |
+| `writeDatabaseJsonFile(json)` | `fis_takip_db.json` dosyasını yazar | — |
+| `receiptImage(path)` | `Image.file` | Boş |
+
+### Veritabanı ve JSON (data/, services/db_export.dart)
+
+| Fonksiyon | Açıklama |
+|---|---|
+| `AppDatabase.open()` | Hive'ı başlatır ve 3 kutuyu açar |
+| `databaseSnapshot(db)` · `databaseJson(db)` | Veritabanını okunabilir JSON'a çevirir (tarihler ISO-8601) |
+| `DatabaseJsonMirror.start()` · `write()` | Kutulardaki değişiklikleri dinler, 400 ms gecikmeyle dosyayı günceller |
+
+### Ekran fonksiyonları
+
+| Fonksiyon | Dosya | Açıklama |
+|---|---|---|
+| `startAddReceipt(context)` | `add_receipt_flow.dart` | **+** menüsünü açar ve seçilen yönteme göre akışı başlatır |
+| `_scan(context, source)` | `add_receipt_flow.dart` | Fotoğraf alır, "Fiş okunuyor..." gösterir, OCR ve ayrıştırmayı çalıştırır |
+| `showOtpNotification(context, code, username)` | `otp_widgets.dart` | Kodu sağ üstte bildirim olarak gösterir (45 sn sonra kapanır) |
+| `confirmDeleteReceipt(context, receipt)` | `receipt_detail_screen.dart` | Silme onayı ister |
+| `openImageViewer(context, path)` | `image_viewer.dart` | Görseli tam ekran açar |
+| `buildTheme(brightness)` | `theme.dart` | Açık/koyu `ThemeData` üretir |
+
+### Yardımcı fonksiyonlar (utils/)
+
+| Fonksiyon | Örnek |
+|---|---|
+| `formatMoney(v)` | `1068.45` → `₺1.068,45` |
+| `formatDate(d)` · `formatDateShort(d)` · `formatMonthYear(d)` | `18 Ekim 2026` · `18 Eki 2026` · `Ekim 2026` |
+| `formatQty(q)` · `parseUserNumber(s)` | `0.75` → `0,75` · `"1.250,00"` → `1250.0` |
+| `trUpper` · `trLower` · `trTitleCase` | `"ışık"` → `"IŞIK"` · `"İSTANBUL"` → `"istanbul"` · `"SÜT 1L"` → `"Süt 1L"` |
+| `normalizeKey(s)` | `"Şok Market"` → `"SOK MARKET"` (eşleştirme için) |
+| `ExpenseCategory.guess(store, text)` | `"MİGROS"` → `market` |
+
+---
+
+## 🧪 Testler
+
+`flutter test` komutu 6 birim testi çalıştırır ve **6'sı da geçer**:
+
+| # | Test | Neyi doğrular? |
+|---|---|---|
+| 1 | Tipik market fişini ayrıştırır | Mağaza, tarih/saat, toplam, KDV, ödeme, fiş no, adet (2 AD, 0,750 KG) ve indirim |
+| 2 | Alt satıra düşen fiyatlar ve binlik ayırıcı | `*1.249,90`, `GENEL TOPLAM`, `KDV TOPLAM`, elektronik kategorisi |
+| 3 | Toplam yoksa kalemlerden hesaplar | "Telefon kılıfı", "Karton bardak" gibi ürünlerin anahtar kelimeyle karışmaması |
+| 4 | ML Kit karakter hataları | **Emülatörde okunan gerçek OCR çıktısı** ile 5/5 ürün ve doğru toplam |
+| 5 | Harften sonra gelen O'ya dokunmaz | `FİŞ NO.0045`, `DR.OETKER` gibi durumlar |
+| 6 | Boş metinde çökmez | Hata durumu |
+
+```bash
+flutter test
+00:00 +6: All tests passed!
+```
 
 ---
 
