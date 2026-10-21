@@ -65,6 +65,17 @@ Future<void> deleteReceiptImage(String? path) async {
   if (await file.exists()) await file.delete();
 }
 
+/// Veritabanının JSON kopyasını yazar. Android'de dosya yöneticisinden ve adb ile
+/// erişilebilen `/sdcard/Android/data/<paket>/files/` klasörü kullanılır.
+Future<String?> writeDatabaseJsonFile(String json) async {
+  final dir = Platform.isAndroid
+      ? (await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory())
+      : await getApplicationDocumentsDirectory();
+  final file = File('${dir.path}/fis_takip_db.json');
+  await file.writeAsString(json, flush: true);
+  return file.path;
+}
+
 Widget receiptImage(String path, {BoxFit fit = BoxFit.cover}) => Image.file(
       File(path),
       fit: fit,

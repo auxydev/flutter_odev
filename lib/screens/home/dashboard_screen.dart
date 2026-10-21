@@ -10,6 +10,7 @@ import '../../utils/format.dart';
 import '../../utils/text_utils.dart';
 import '../../widgets/common.dart';
 import '../receipts/add_receipt_flow.dart';
+import 'database_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key, required this.onNavigate});
@@ -42,11 +43,24 @@ class DashboardScreen extends StatelessWidget {
                 tooltip: 'Hesap',
                 onSelected: (value) async {
                   if (value == 'logout') await context.read<AuthController>().logout();
+                  if (value == 'db' && context.mounted) {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute<void>(builder: (_) => const DatabaseScreen()),
+                    );
+                  }
                 },
                 itemBuilder: (_) => [
                   PopupMenuItem<String>(
                     enabled: false,
                     child: Text(user.email),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'db',
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      leading: Icon(Icons.data_object_rounded),
+                      title: Text('Veritabanı (JSON)'),
+                    ),
                   ),
                   const PopupMenuItem<String>(
                     value: 'logout',

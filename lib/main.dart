@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -7,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'data/app_database.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/home/home_shell.dart';
+import 'services/db_export.dart';
 import 'state/auth_controller.dart';
 import 'state/receipt_controller.dart';
 import 'theme.dart';
@@ -16,10 +19,15 @@ Future<void> main() async {
   await initializeDateFormatting('tr_TR');
   Intl.defaultLocale = 'tr_TR';
   final db = await AppDatabase.open();
+  // Veritabanı her değiştiğinde fis_takip_db.json dosyası güncellenir.
+  final jsonMirror = DatabaseJsonMirror(db);
+  unawaited(jsonMirror.start());
 
   runApp(
     MultiProvider(
       providers: [
+        Provider.value(value: db),
+        Provider.value(value: jsonMirror),
         ChangeNotifierProvider(create: (_) => AuthController(db)),
         ChangeNotifierProxyProvider<AuthController, ReceiptController>(
           create: (_) => ReceiptController(db),

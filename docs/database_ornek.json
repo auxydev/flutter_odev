@@ -1,0 +1,95 @@
+{
+  "exportedAt": "2026-10-21T07:26:39.942349",
+  "session": {
+    "currentUser": "kagan",
+    "rememberedUser": "kagan"
+  },
+  "users": [
+    {
+      "username": "kagan",
+      "email": "kagan@example.test",
+      "passwordHash": "afa0f4b457cba77d0e2133829dff4830baf0f4fe026c8d6b7303a788f174d2bf",
+      "salt": "Km776f2bFDkV-T9GDJ2Fkw==",
+      "createdAt": "2026-10-19T13:20:05.347"
+    }
+  ],
+  "receipts": [
+    {
+      "id": "17924163488453389765",
+      "owner": "kagan",
+      "storeName": "Migros Ticaret A.Ş.",
+      "date": "2026-10-18T18:47:00.000",
+      "category": "market",
+      "items": [
+        {
+          "name": "Su 0.5L",
+          "quantity": 3.0,
+          "total": 37.5
+        },
+        {
+          "name": "Makarna 500G",
+          "quantity": 1.0,
+          "total": 24.9
+        },
+        {
+          "name": "Zeytinyağı 1L",
+          "quantity": 1.0,
+          "total": 329.0
+        },
+        {
+          "name": "Deterjan",
+          "quantity": 1.0,
+          "total": 189.9
+        },
+        {
+          "name": "Elma",
+          "quantity": 1.0,
+          "total": 42.75
+        }
+      ],
+      "total": 624.05,
+      "vat": 35.71,
+      "paymentMethod": "Kart",
+      "receiptNo": "0312",
+      "imagePath": "/data/user/0/com.kagan.fis_takip/app_flutter/receipts/17924163488453389765.jpg",
+      "rawText": "MÍGROS TỈCARET A.Ş.\nATAŞEHİR MAH. ÇAMLIK SK. NO:8\nTEL: 0216 555 12 34\nTARİH: 18.10. 2026  SAAT: 18:47\nFİŞ NO: 0312\n3 AD X 12, 50\nSU O.5L  %01  *37, 50\nMAKARNA 500G  %01  *24,9\nZEYTİNYAĞI 1L %O1  *329,00\nDETERJAN  %20  *189,90\nELMA  %01  *42,75\nTOPKDV  *35,71\nTOPLAM  *624,O5\nKREDİ KARTI  *624,05\nTEŞEKKÜR EDERİz",
+      "createdAt": "2026-10-19T13:25:48.991"
+    },
+    {
+      "id": "1792567507141544817e",
+      "owner": "kagan",
+      "storeName": "Bim Birleşik Mağazalar A.Ş.",
+      "date": "2026-10-19T09:41:00.000",
+      "category": "market",
+      "items": [
+        {
+          "name": "Ekmek",
+          "quantity": 2.0,
+          "total": 30.0
+        },
+        {
+          "name": "Yumurta 10LU",
+          "quantity": 1.0,
+          "total": 79.5
+        },
+        {
+          "name": "Beyaz Peynir",
+          "quantity": 1.0,
+          "total": 145.9
+        },
+        {
+          "name": "Çay 1KG",
+          "quantity": 1.0,
+          "total": 189.0
+        }
+      ],
+      "total": 444.4,
+      "vat": 35.57,
+      "paymentMethod": "Kart",
+      "receiptNo": "0127",
+      "imagePath": null,
+      "rawText": "BİM BİRLEŞİK MAĞAZALAR A.Ş.\nESENTEPE MAH. BÜYÜKDERE CAD. NO:45\nTARİH: 19.10.2026  SAAT: 09:41\nFİŞ NO: 0127\n2 AD X 15,00\nEKMEK          %01  *30,00\nYUMURTA 10LU   %01  *79,50\nBEYAZ PEYNİR   %01  *145,90\nÇAY 1KG        %20  *189,00\nTOPKDV              *35,57\nTOPLAM              *444,40\nKREDİ KARTI         *444,40",
+      "createdAt": "2026-10-21T07:25:07.141"
+    }
+  ]
+}

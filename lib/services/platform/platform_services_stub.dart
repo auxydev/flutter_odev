@@ -10,4 +10,7 @@ Future<String?> persistReceiptImage(String sourcePath, String receiptId) async =
 
 Future<void> deleteReceiptImage(String? path) async {}
 
+/// Web'de dosya sistemi yok; JSON uygulama içindeki ekrandan görüntülenir.
+Future<String?> writeDatabaseJsonFile(String json) async => null;
+
 Widget receiptImage(String path, {BoxFit fit = BoxFit.cover}) => const SizedBox.shrink();
