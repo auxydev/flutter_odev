@@ -209,18 +209,20 @@ Veriler cihazda **Hive** ile saklanır: Android'de dosyada, web'de tarayıcını
 | `receipts` | fiş id | sahibi, mağaza, tarih, kategori, **ürünler listesi**, toplam, KDV, ödeme, fiş no, görsel yolu, okunan ham metin |
 | `session` | `current`, `remembered` | açık oturum ve hatırlanan kullanıcı |
 
-**Veritabanını görmenin 3 yolu:**
+**Veritabanını görmenin 4 yolu:**
 
-1. **Uygulama içinden:** Ana sayfada avatar → **Veritabanı (JSON)**. Yenileme ve kopyalama düğmeleri vardır, web'de de çalışır.
-2. **Telefondaki dosya:** Her değişiklikte otomatik güncellenir:
+1. **Proje klasöründen (editörde canlı):** Uygulama emülatörde açıkken şu komutu çalıştır:
+   ```bash
+   dart run tool/db_cek.dart --izle
+   ```
+   Veritabanı `database/fis_takip_db.json` dosyasına kopyalanır. Uygulamada fiş ekledikçe veya sildikçe dosya **2 saniye içinde kendiliğinden güncellenir**, VS Code'da açık tutman yeterli. Tek seferlik kopyalamak için `--izle` yazmadan çalıştır.
+   > `database/` klasörü `.gitignore`'dadır. Gerçek kullanıcı verileri repoya gönderilmez.
+2. **Uygulama içinden:** Ana sayfada avatar → **Veritabanı (JSON)**. Yenileme ve kopyalama düğmeleri vardır, web'de de çalışır.
+3. **Telefondaki dosya:** Her değişiklikte otomatik güncellenir:
    ```
    /sdcard/Android/data/com.kagan.fis_takip/files/fis_takip_db.json
    ```
-   Bilgisayara çekmek için:
-   ```bash
-   adb pull /sdcard/Android/data/com.kagan.fis_takip/files/fis_takip_db.json
-   ```
-3. **Repodaki örnek:** [`docs/database_ornek.json`](docs/database_ornek.json)
+4. **Repodaki örnek:** [`docs/database_ornek.json`](docs/database_ornek.json)
 
 <details>
 <summary><b>Örnek JSON'u göster</b> (kısaltılmış)</summary>
@@ -313,6 +315,7 @@ lib/
 ├── widgets/                      Ortak bileşenler · kayan sekmeler · kod girişi ve bildirimi
 └── utils/                        Türkçe metin ve para/tarih biçimlendirme
 test/receipt_parser_test.dart     Ayrıştırıcı birim testleri
+tool/db_cek.dart                  Cihazdaki veritabanını database/ klasörüne çeker
 ```
 
 **Tasarım kararları:**

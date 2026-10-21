@@ -49,3 +49,6 @@ app.*.map.json
 
 # Claude Code yerel ayarları
 .claude/
+
+# Cihazdan çekilen canlı veritabanı (kişisel veri içerir, repoya girmez)
+/database/
