@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../state/auth_controller.dart';
+import '../../widgets/no_internet_dialog.dart';
 import 'auth_layout.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -31,6 +32,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
+    // İnternet yoksa "yeniden bağlanılıyor" penceresi; vazgeçilirse kayıt yapılmaz.
+    if (!await ensureOnline(context)) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
+    if (!mounted) return;
     final navigator = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);
     final error = await context.read<AuthController>().register(

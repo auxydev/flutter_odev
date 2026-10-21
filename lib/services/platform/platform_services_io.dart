@@ -65,6 +65,23 @@ Future<void> deleteReceiptImage(String? path) async {
   if (await file.exists()) await file.delete();
 }
 
+/// Gerçekten internete çıkılabiliyor mu? (Yalnızca Wi-Fi'ye bağlı olmak yetmez.)
+/// Gerçek bir TCP bağlantısı açmayı dener. DNS bozuk olsa da doğru sonuç
+/// versin diye önce doğrudan IP adresleri (Cloudflare, Google DNS) denenir.
+Future<bool> hasInternetConnection() async {
+  const targets = [('1.1.1.1', 443), ('8.8.8.8', 53), ('google.com', 443)];
+  for (final (host, port) in targets) {
+    try {
+      final socket = await Socket.connect(host, port, timeout: const Duration(seconds: 2));
+      socket.destroy();
+      return true;
+    } catch (_) {
+      // Sıradaki adresi dene.
+    }
+  }
+  return false;
+}
+
 /// Veritabanının JSON kopyasını yazar. Android'de dosya yöneticisinden ve adb ile
 /// erişilebilen `/sdcard/Android/data/<paket>/files/` klasörü kullanılır.
 Future<String?> writeDatabaseJsonFile(String json) async {

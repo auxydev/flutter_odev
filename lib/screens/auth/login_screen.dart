@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../state/auth_controller.dart';
+import '../../widgets/no_internet_dialog.dart';
 import 'auth_layout.dart';
 import 'forgot_password_screen.dart';
 import 'register_screen.dart';
@@ -51,6 +52,12 @@ class _LoginScreenState extends State<LoginScreen> {
       _loading = true;
       _error = null;
     });
+    // İnternet yoksa "yeniden bağlanılıyor" penceresi; vazgeçilirse giriş yapılmaz.
+    if (!await ensureOnline(context)) {
+      if (mounted) setState(() => _loading = false);
+      return;
+    }
+    if (!mounted) return;
     final error = await context.read<AuthController>().login(
           identifier: _identifier.text,
           password: _password.text,

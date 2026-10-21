@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Giriş/kayıt öncesi internet bağlantısı kontrolü için -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Fiş Takip"
         android:name="${applicationName}"

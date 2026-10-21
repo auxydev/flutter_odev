@@ -63,6 +63,7 @@ Market, akaryakıt ve kafe gibi yerlerden aldığımız fişler genellikle cüzd
 | Alan | Özellik |
 |---|---|
 | 👤 **Hesap** | Kayıt ol, giriş yap, **Beni hatırla**, **Şifremi unuttum** (6 haneli doğrulama kodu ile) |
+| 📡 **Bağlantı kontrolü** | İnternet yokken giriş veya kayıt yapılamaz. **"İnternet bağlantısı yok"** penceresi otomatik olarak yeniden bağlanmayı dener, **Şimdi dene** ve **Vazgeç** butonları vardır |
 | 🏠 **Ana sayfa** | "Merhaba *kullanıcı adı*!" karşılaması, sağ üstte **+** butonu, aylık, haftalık ve günlük özet, kategori dağılımı, son fişler |
 | 📷 **Fiş ekleme** | Kamerayla tara · Galeriden seç · Fiş metnini yapıştır · Elle gir |
 | 🤖 **Akıllı ayrıştırma** | Mağaza, tarih/saat, fiş no, ürünler, adet (`3 AD X 12,50`), KDV, toplam, ödeme tipi, otomatik **kategori** tahmini |
@@ -93,10 +94,10 @@ Market, akaryakıt ve kafe gibi yerlerden aldığımız fişler genellikle cüzd
 | <img src="docs/screenshots/07_rapor_urunler.png" width="240"> | <img src="docs/screenshots/08_gecmis_fisler.png" width="240"> | <img src="docs/screenshots/09_fis_detay.png" width="240"> |
 | Fişlerden ayrıştırılan ürünlerin dökümü | Arama ve kategori filtresi | Ürünler, birim fiyat, KDV, toplam |
 
-| Veritabanı (JSON) |
-|:---:|
-| <img src="docs/screenshots/10_veritabani.png" width="240"> |
-| Uygulama içinden veritabanının JSON hâli |
+| Veritabanı (JSON) | İnternet yok |
+|:---:|:---:|
+| <img src="docs/screenshots/10_veritabani.png" width="240"> | <img src="docs/screenshots/11_internet_yok.png" width="240"> |
+| Uygulama içinden veritabanının JSON hâli | Uçak modunda giriş: otomatik yeniden deneme ve Vazgeç |
 
 ---
 
@@ -107,12 +108,16 @@ flowchart TD
     A([Uygulama açılır]) --> B{Beni hatırla ile<br/>oturum var mı?}
     B -- Evet --> H
     B -- Hayır --> L[Giriş ekranı]
-    L -- Hesabın yok mu? --> R[Kayıt ol] --> H
+    L -- Hesabın yok mu? --> R[Kayıt ol] --> NET
     L -- Şifremi unuttum --> F1[Kullanıcı adı / e-posta]
     F1 --> F2[6 haneli kod sağ üstte gösterilir]
     F2 --> F3[Kodu gir · 3 dk süre · 5 deneme]
     F3 --> F4[Yeni şifre belirle] --> L
-    L -- Giriş --> H
+    L -- Giriş --> NET{İnternet var mı?}
+    NET -- Evet --> H
+    NET -- Hayır --> NI[📡 İnternet yok<br/>5 sn arayla yeniden dener]
+    NI -- Bağlantı geldi --> H
+    NI -- Vazgeç --> L
 
     H[🏠 Ana sayfa<br/>Merhaba kullanıcı!] -- "+" --> S{Fiş ekleme yöntemi}
     S -- Kamera / Galeri --> O[ML Kit OCR] --> P[Ayrıştırıcı]
@@ -385,6 +390,7 @@ Uygulama ve README'deki tüm ekran görüntüleri bu sanal cihazda test edildi:
 | `intl` | 0.20.3 | Türkçe tarih (`18 Ekim 2026`) ve para (`₺1.068,45`) biçimi |
 | `flutter_localizations` | SDK | Takvim ve saat seçicilerin Türkçe olması |
 | `path_provider` | 2.1.6 | Fiş görselleri ve JSON dosyası için klasörler |
+| `web` | 1.1.1 | Web'de tarayıcının çevrimiçi durumunu okuma |
 | `cupertino_icons` | 1.0.9 | İkon seti |
 | `flutter_lints` *(geliştirme)* | 6.0.0 | Kod kalite kuralları |
 | `flutter_test` *(geliştirme)* | SDK | Birim testleri |
@@ -394,7 +400,7 @@ Uygulama ve README'deki tüm ekran görüntüleri bu sanal cihazda test edildi:
 
 ## 📂 Dosyalar
 
-Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosyası, 1 test dosyası ve 1 araç betiği.
+Proje **35 Dart dosyası** ve **5.722 satır** koddan oluşur: 33 uygulama dosyası, 1 test dosyası ve 1 araç betiği.
 
 | Dosya | Satır | Görevi |
 |---|---:|---|
@@ -414,12 +420,12 @@ Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosya
 | `lib/services/report_service.dart` | 193 | Günlük, haftalık ve aylık dönem hesapları ve rapor özetleri |
 | `lib/services/db_export.dart` | 66 | Veritabanını JSON'a çevirir ve dosyaya yansıtır |
 | `lib/services/platform/platform_services.dart` | 5 | Mobilde ve web'de doğru uygulamayı seçen koşullu export |
-| `lib/services/platform/platform_services_io.dart` | 85 | Mobil: ML Kit OCR, satır birleştirme, görsel ve JSON dosyası |
-| `lib/services/platform/platform_services_stub.dart` | 16 | Web: OCR ve dosya işlemlerinin boş karşılıkları |
+| `lib/services/platform/platform_services_io.dart` | 102 | Mobil: ML Kit OCR, satır birleştirme, görsel ve JSON dosyası, internet kontrolü |
+| `lib/services/platform/platform_services_stub.dart` | 20 | Web: OCR ve dosya işlemlerinin boş karşılıkları |
 | **Ekranlar** | | |
 | `lib/screens/auth/auth_layout.dart` | 196 | Giriş ekranlarının ortak iskeleti (gradyanlı başlık) ve şifre alanı |
-| `lib/screens/auth/login_screen.dart` | 177 | Giriş ekranı, Beni hatırla, Şifremi unuttum bağlantısı |
-| `lib/screens/auth/register_screen.dart` | 132 | Kayıt ekranı ve form doğrulama |
+| `lib/screens/auth/login_screen.dart` | 184 | Giriş ekranı, Beni hatırla, Şifremi unuttum bağlantısı |
+| `lib/screens/auth/register_screen.dart` | 139 | Kayıt ekranı ve form doğrulama |
 | `lib/screens/auth/forgot_password_screen.dart` | 337 | 3 adımlı şifre sıfırlama (kullanıcı adı → kod → yeni şifre) |
 | `lib/screens/home/home_shell.dart` | 68 | Alt menü (Ana Sayfa · Raporlar · Geçmiş Fişler) |
 | `lib/screens/home/dashboard_screen.dart` | 426 | "Merhaba kullanıcı!", **+** butonu, özet kartı, kategoriler, son fişler |
@@ -434,6 +440,7 @@ Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosya
 | `lib/widgets/common.dart` | 153 | Fiş satırı, kategori ikonu, bölüm başlığı, boş durum, kart listesi |
 | `lib/widgets/pill_tabs.dart` | 125 | Kayan sekme seçici |
 | `lib/widgets/otp_widgets.dart` | 286 | Sağ üstte çıkan kod bildirimi ve 6 kutulu kod girişi |
+| `lib/widgets/no_internet_dialog.dart` | 188 | "İnternet bağlantısı yok" ve yeniden bağlanma penceresi |
 | `lib/utils/format.dart` | 41 | Para, tarih ve sayı biçimlendirme |
 | `lib/utils/text_utils.dart` | 38 | Türkçeye uygun büyük/küçük harf dönüşümleri |
 | **Test ve araç** | | |
@@ -447,8 +454,8 @@ Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosya
 | `pubspec.yaml` | Paketler ve font tanımları |
 | `assets/fonts/PlusJakartaSans-*.ttf` | 5 kalınlıkta gömülü font |
 | `android/app/build.gradle.kts` | Android derleme ayarları |
-| `android/app/src/main/AndroidManifest.xml` | Uygulama adı ("Fiş Takip") ve izinler |
-| `docs/screenshots/*.png` | README'deki 10 ekran görüntüsü |
+| `android/app/src/main/AndroidManifest.xml` | Uygulama adı ("Fiş Takip") ve `INTERNET` izni |
+| `docs/screenshots/*.png` | README'deki 11 ekran görüntüsü |
 | `docs/database_ornek.json` | Örnek veritabanı içeriği |
 
 ---
@@ -483,6 +490,7 @@ Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosya
 | `PillTabs<T>` | Stateless (generic) | `pill_tabs.dart` | Kayan seçici (Günlük/Haftalık/Aylık, Nakit/Kart) |
 | `OtpInput` | Stateful | `otp_widgets.dart` | 6 kutulu doğrulama kodu girişi |
 | `_OtpNotification` | Stateful + animasyon | `otp_widgets.dart` | Sağ üstten kayarak gelen kod bildirimi |
+| `_NoInternetDialog` | Stateful | `no_internet_dialog.dart` | Geri sayım, deneme sayacı, Şimdi dene ve Vazgeç |
 | `ReceiptTile` | Stateless | `common.dart` | Listelerde fiş satırı |
 | `CategoryAvatar` | Stateless | `common.dart` | Kategori renginde ikon kutusu |
 | `SectionHeader` · `EmptyState` · `CardList` | Stateless | `common.dart` | Bölüm başlığı, boş durum ve ayraçlı kart listesi |
@@ -565,6 +573,7 @@ Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosya
 | `persistReceiptImage(path, id)` | Görseli uygulamanın kalıcı klasörüne kopyalar | — |
 | `deleteReceiptImage(path)` | Görseli siler | — |
 | `writeDatabaseJsonFile(json)` | `fis_takip_db.json` dosyasını yazar | — |
+| `hasInternetConnection()` | Sırayla 1.1.1.1, 8.8.8.8 ve google.com'a TCP bağlantısı dener | `navigator.onLine` |
 | `receiptImage(path)` | `Image.file` | Boş |
 
 ### Veritabanı ve JSON (data/, services/db_export.dart)
@@ -582,6 +591,7 @@ Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosya
 | `startAddReceipt(context)` | `add_receipt_flow.dart` | **+** menüsünü açar ve seçilen yönteme göre akışı başlatır |
 | `_scan(context, source)` | `add_receipt_flow.dart` | Fotoğraf alır, "Fiş okunuyor..." gösterir, OCR ve ayrıştırmayı çalıştırır |
 | `showOtpNotification(context, code, username)` | `otp_widgets.dart` | Kodu sağ üstte bildirim olarak gösterir (45 sn sonra kapanır) |
+| `ensureOnline(context)` | `no_internet_dialog.dart` | İnternet varsa hemen devam eder, yoksa yeniden bağlanma penceresini açar. Bağlantı gelirse `true`, Vazgeç ile `false` döner |
 | `confirmDeleteReceipt(context, receipt)` | `receipt_detail_screen.dart` | Silme onayı ister |
 | `openImageViewer(context, path)` | `image_viewer.dart` | Görseli tam ekran açar |
 | `buildTheme(brightness)` | `theme.dart` | Açık/koyu `ThemeData` üretir |
@@ -629,6 +639,7 @@ flutter test
 | Dart'ın `toUpperCase` fonksiyonu Türkçe I/İ dönüşümünü bilmiyor | Türkçeye özel `trUpper`, `trLower` ve `trTitleCase` yazıldı |
 | Android derlemesi eksik NDK yüzünden başarısız oldu | Gerekli NDK sürümü kuruldu |
 | Web'de doğrulama kodu kutularına yazı girilemiyordu | Görünmez alan `Opacity(0)` yerine şeffaf yazıyla çizildi |
+| Emülatörde uçak modu kapatılınca DNS çözümlemesi bozuk kaldı ve internet varken bile "yok" denildi | Bağlantı kontrolü önce doğrudan IP adreslerine (1.1.1.1, 8.8.8.8) bağlanacak şekilde değiştirildi |
 | Klavyedeki "ileri" tuşu bir sonraki alan yerine şifre göster/gizle butonuna atlıyordu | Buton odak sırasından çıkarıldı (`ExcludeFocus`) |
 
 ---
