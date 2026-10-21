@@ -204,7 +204,7 @@ flowchart LR
 
 ---
 
-## 🗄️ Veritabanı ve JSON görünümü
+## 💾 Veritabanı ve JSON görünümü
 
 Veriler cihazda **Hive** ile saklanır: Android'de dosyada, web'de tarayıcının IndexedDB'sinde. Üç tablo (kutu) vardır:
 
@@ -270,7 +270,7 @@ Veriler cihazda **Hive** ile saklanır: Android'de dosyada, web'de tarayıcını
 
 ---
 
-## 🏗️ Mimari
+## 🏢 Mimari
 
 ```mermaid
 flowchart TB
@@ -330,7 +330,7 @@ tool/db_cek.dart                  Cihazdaki veritabanını database/ klasörüne
 
 ---
 
-## 🖥️ Geliştirme ve test ortamı
+## 💻 Geliştirme ve test ortamı
 
 ### Android emülatörü
 
@@ -505,7 +505,7 @@ Proje **34 Dart dosyası** ve **5.499 satır** koddan oluşur: 32 uygulama dosya
 
 ---
 
-## ⚙️ Sınıflar ve fonksiyonlar
+## 🔧 Sınıflar ve fonksiyonlar
 
 ### `AuthController` (state/auth_controller.dart)
 
